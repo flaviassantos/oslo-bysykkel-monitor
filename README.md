@@ -18,6 +18,7 @@ To update the data, just refresh the browser or click in the _'Explore all the s
 - Web Framework: [Flask](https://www.palletsprojects.com/p/flask/)
 
 <br />
+
 ## How to use it
 
 ```bash

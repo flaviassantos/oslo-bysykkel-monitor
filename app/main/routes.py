@@ -12,7 +12,7 @@ def index():
     """
     try:
         stations, last_updated = get_station_data()
-        flash("The plant is closed for winter. See you again in April!")
+        flash("The plant is closed for the winter. See you again in April!")
         return render_template('index.html', stations=stations, last_updated=last_updated)
     except:
         flash("Not possible to retrieve data from the API."
