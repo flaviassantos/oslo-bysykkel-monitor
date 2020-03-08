@@ -2,7 +2,7 @@
 
 This project contains a simple Python application for working with an open API (in this case the [Oslo Bysykkel](https://oslobysykkel.no/apne-data/sanntid).
 
-![HOME PAGE](app/static/assets/img/home.png)
+![HOME PAGE](app/static/assets/img/home.jpg)
 
 ## Introduction
 The app shows a list of the various bike stations and how many available locks and available bikes are on them at the moment.
