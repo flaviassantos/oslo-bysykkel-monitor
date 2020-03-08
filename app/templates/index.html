@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+      <!-- Table -->
+      <div class="row">
+            <div class="col">
+              <div class="card shadow">
+                <div class="card-header border-0">
+                  <h3 class="mb-0">Oslo Bysykkel Stations</h3>
+                    <h7 class="card-title text-muted mb-0">Last updated: {{ last_updated }}</h7>
+                    <br>
+                </div>
+                <div class="table-responsive">
+                  <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Station</th>
+                        <th scope="col">Bikes</th>
+                        <th scope="col">Docks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for station in stations %}
+                      <tr>
+                        <th scope="row">
+                          <div class="media align-items-center">
+                            <a href="#" class="avatar rounded-circle mr-3">
+                              <img alt="Bike" src="static/assets/img/_bike.jpg"  width="30" height="30">
+                            </a>
+                          </div>
+                        </th>
+                            <td>
+                              <span class="badge badge-dot mr-4">
+                                <span class="h5 mb-0 text-sm">{{ station['name'] }}</span>
+                              </span>
+                            </td>
+                            <td>
+                              {{ station['num_bikes_available'] }} available
+                            </td>
+                            <td>
+                              {{ station['num_docks_available'] }} available
+                            </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+      </div>
+{% endblock %}
