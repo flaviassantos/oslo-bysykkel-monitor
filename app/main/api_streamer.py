@@ -5,7 +5,7 @@ import app
 from config import Config
 import requests
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 # TODO: transform into a class?
@@ -48,7 +48,7 @@ def parse_datetime(date_time=None):
     -------
     dt: string with the formatted timestamp
     """
-    dt = datetime.fromtimestamp(date_time).strftime("%B %d, %Y %I:%M:%S")
+    dt = datetime.fromtimestamp(date_time, timezone.utc).strftime("%B %d, %Y %I:%M:%S")
     return dt
 
 
