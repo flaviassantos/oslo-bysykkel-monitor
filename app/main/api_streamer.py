@@ -1,11 +1,14 @@
 import sys
 from flask import flash
+
+import app
 from config import Config
 import requests
 import pandas as pd
 from datetime import datetime
 
-CLIENT_IDENTIFIER = {'Client-Identifier': 'flavia-oslobysykkelmonitor'}
+
+# TODO: transform into a class?
 
 
 def fetch_api_data(url=None, headers=None):
@@ -21,15 +24,15 @@ def fetch_api_data(url=None, headers=None):
 
     Returns
     -------
-    response['data']['stations']: json data
+    response_body['data']['stations']: json data
     last_updated: integer representing the elapsed time in number of seconds
 
     """
     try:
-        response = requests.get(url=url, headers=headers).json()
-        last_updated = response['last_updated']
-        return response['data']['stations'], last_updated
-    except AttributeError as e:
+        response = requests.get(url=url, headers=headers)
+        response_body = response.json()
+        return response_body
+    except requests.exceptions.RequestException as e:
         raise e
 
 
@@ -60,16 +63,23 @@ def get_station_data(config_class=Config):
 
     Returns
     -------
-    station_data: list with the station data as a dictionary
+    station_data: list which contains the station data in a dictionary format
     last_updated: string with formatted timestamp
 
     """
     try:
         columns = ['station_id', 'name', 'num_bikes_available',
                    'num_docks_available', 'last_reported']
-        headers = CLIENT_IDENTIFIER
-        dict_info, _ = fetch_api_data(url=config_class.URL_INFO, headers=headers)
-        dict_status, last_updated = fetch_api_data(url=config_class.URL_STATUS, headers=headers)
+        headers = {"Client-Identifier": config_class.CLIENT_IDENTIFIER}
+
+        # Station information
+        data_info = fetch_api_data(url=config_class.URL_INFO, headers=headers)  # json
+        dict_info = data_info['data']['stations']
+
+        # Station status
+        data_status = fetch_api_data(url=config_class.URL_STATUS, headers=headers)  # json
+        dict_status = data_status['data']['stations']
+        last_updated = data_status['last_updated']
         last_updated = parse_datetime(last_updated)
 
         # Parse into dataframe and merge by 'station_id'

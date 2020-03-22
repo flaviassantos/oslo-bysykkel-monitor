@@ -6,9 +6,7 @@ from logging.handlers import RotatingFileHandler
 import logging
 
 
-app = Flask(__name__)
-app.config.from_object(Config)
-bootstrap = Bootstrap(app)
+bootstrap = Bootstrap()
 
 
 def create_app(config_class=Config):
