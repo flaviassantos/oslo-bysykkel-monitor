@@ -18,7 +18,7 @@ jobs:
       - uses: actions/upload-artifact@master
         with:
           name: python artifacts
-          path: public/
+          path: tests/
           
   test:
     runs-on: ubuntu-latest
