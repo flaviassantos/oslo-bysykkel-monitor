@@ -18,9 +18,10 @@ jobs:
       - uses: actions/upload-artifact@master
         with:
           name: python artifacts
-          path: public/
+          path: tests/
           
   test:
+    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -29,6 +30,10 @@ jobs:
         
     steps:
     - uses: actions/checkout@v1
+    - uses: actions/download-artifact@master
+      with: 
+        name: python artifacts
+        path: tests      
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
