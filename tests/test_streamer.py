@@ -27,9 +27,9 @@ class TestFetchAPIData:
 
 def test_parse_datetime():
     last_updated = 1584862677
-    expected = 'March 22, 2020 08:37:57'
+    expected = 'March 22, 2020 07:37:57'
     actual = parse_datetime(last_updated)
-    assert expected == actual
+    assert actual == expected
 
 
 def test_get_station_data():
@@ -38,6 +38,6 @@ def test_get_station_data():
     station_data, last_updated = get_station_data()
     actual_attributes = [k for k, v in station_data[0].items()]
 
-    assert expected_attributes == actual_attributes
+    assert actual_attributes == expected_attributes
     assert len(station_data) > 0
     assert type(last_updated) == str
