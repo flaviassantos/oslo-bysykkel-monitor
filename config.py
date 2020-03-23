@@ -10,3 +10,5 @@ class Config(object):
     URL_STATUS = "https://gbfs.urbansharing.com/oslobysykkel.no/station_status.json"
     URL_INFO = "https://gbfs.urbansharing.com/oslobysykkel.no/station_information.json"
     CLIENT_IDENTIFIER = "flavia-oslobysykkelmonitor"
+    DATABASE_URI = os.environ.get('DATABASE_URL') or \
+                   'sqlite:///' + os.path.join(basedir, 'app.db')

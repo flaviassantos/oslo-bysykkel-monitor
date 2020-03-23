@@ -14,6 +14,7 @@ class StationStreamer:
                         'num_docks_available', 'last_reported']
         self.url_info = Config.URL_INFO
         self.url_status = Config.URL_STATUS
+        self.connection_string = Config.DATABASE_URI
 
     def fetch_api_data(self, url=None):
         """
@@ -73,11 +74,26 @@ class StationStreamer:
             df = df[self.columns]
             df = df.loc[:, ~df.columns.duplicated()]
             df.sort_values(by='name', inplace=True)
+
+            self.to_database(df)
+
             station_data = list(df.T.to_dict().values())
             return station_data, last_updated
 
         except:
             flash(f"Oops! Exception: '{sys.exc_info()[0]}' occurred.")
+
+    def to_database(self, dataframe):
+        """
+        Writes station data stored in a DataFrame to a SQL database.
+        Table overwritten.
+
+        Parameters
+        ----------
+        dataframe: pandas.DataFrame flat table which contains station data
+        """
+        con = self.connection_string
+        dataframe.to_sql("station", con, if_exists="replace", index=False)
 
 
 def parse_datetime(date_time=None):
