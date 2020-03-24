@@ -9,7 +9,7 @@ def get_stations():
 
     Representing station as JSON objects:
         [
-            {|
+            {
                 "last_reported": 1585031881,
                 "last_updated": "March 24, 2020 06:38:01",
                 "name": "Vår Frelsers gravlund sør",
