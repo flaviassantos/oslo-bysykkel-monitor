@@ -31,6 +31,9 @@ def create_app(config_class=Config):
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
+    from app.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix='/api')
+
     if not os.path.exists('logs'):
         os.mkdir('logs')
         file_handler = RotatingFileHandler('logs/oslo-bysykkel-monitor.log',
