@@ -1,6 +1,6 @@
 import pytest
 import requests
-from app.main.api_streamer import StationStreamer, parse_datetime
+from app.api.streamer import StationStreamer, parse_datetime
 import pandas as pd
 
 
@@ -27,7 +27,19 @@ def test_api_response_body(streamer):
     assert "stations" in resp_info_body["data"]
 
 
-def test_export_data_to_database(streamer):
+def test_select_data(streamer):
+    expected_attributes = ['station_id', 'name', 'num_bikes_available',
+                           'num_docks_available', 'last_reported']
+
+    station_data, last_updated = streamer.select_data()
+    actual_attributes = [k for k, v in station_data[0].items()]
+
+    assert actual_attributes == expected_attributes
+    assert len(station_data) > 0
+    assert type(last_updated) == str
+
+
+def test_save_data_to_database(streamer):
     data = {"station_id": ["111"], "name": ["Ensjø T-bane"],
             "num_bikes_available": [11], "num_docks_available": [8],
             "last_reported": [1540219230]}

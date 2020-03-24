@@ -40,7 +40,7 @@ class StationStreamer:
         except requests.exceptions.RequestException as e:
             raise e
 
-    def get_station_data(self):
+    def select_data(self):
         """
         Reads data into json format and parse it into a pandas.DataFrame.
         Keeps only the most relevant attributes of the station data.
