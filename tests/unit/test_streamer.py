@@ -1,12 +1,38 @@
+import os
 import pytest
 import requests
-from app.api.streamer import StationStreamer, parse_datetime
+from app.main.streamer import StationStreamer, parse_datetime
 import pandas as pd
+from config import Config
+
+
+class TestConfig:
+    DATABASE_URI = 'sqlite:///test.db'
+    URL_STATUS = Config.URL_STATUS
+    URL_INFO = Config.URL_INFO
+    CLIENT_IDENTIFIER = Config.CLIENT_IDENTIFIER
+
+
+def tear_down_db():
+    os.remove('test.db')
+
+
+@pytest.fixture(scope='module')
+def df():
+    data = {"station_id": ["111"],
+            "name": ["Ensjø T-bane"],
+            "num_bikes_available": [11],
+            "num_docks_available": [8],
+            "last_reported": [1540219230],
+            "last_updated": ['March 22, 2020 07:37:57']
+            }
+    df = pd.DataFrame.from_dict(data)
+    return df
 
 
 @pytest.fixture(scope='module')
 def streamer():
-    return StationStreamer()
+    return StationStreamer(TestConfig)
 
 
 def test_api_response_status(streamer):
@@ -27,10 +53,15 @@ def test_api_response_body(streamer):
     assert "stations" in resp_info_body["data"]
 
 
-def test_select_data(streamer):
-    expected_attributes = ['station_id', 'name', 'num_bikes_available',
-                           'num_docks_available', 'last_reported']
+def test_parse_into_dataframes(streamer, df):
+    expected_attributes = df.columns
+    df_actual = streamer.parse_into_dataframe()
+    assert all([a == b for a, b in zip(df_actual.columns, expected_attributes)])
+    assert len(df_actual) > 0
 
+
+def test_select_data(streamer, df):
+    expected_attributes = df.columns.to_list()
     station_data, last_updated = streamer.select_data()
     actual_attributes = [k for k, v in station_data[0].items()]
 
@@ -39,14 +70,11 @@ def test_select_data(streamer):
     assert type(last_updated) == str
 
 
-def test_save_data_to_database(streamer):
-    data = {"station_id": ["111"], "name": ["Ensjø T-bane"],
-            "num_bikes_available": [11], "num_docks_available": [8],
-            "last_reported": [1540219230]}
-    df = pd.DataFrame.from_dict(data)
+def test_save_data_to_database(streamer, df):
     streamer.to_database(df)
-    db_table = pd.read_sql(f"SELECT * FROM station", con=streamer.connection_string)
+    db_table = pd.read_sql(f"SELECT * FROM {streamer.table_name}", con=streamer.connection_string)
     assert len(db_table) > 0
+    tear_down_db()
 
 
 def test_parse_datetime():

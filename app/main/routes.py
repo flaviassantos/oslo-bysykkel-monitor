@@ -1,7 +1,7 @@
 from werkzeug.utils import redirect
 from flask import render_template, flash
 from app.main import bp
-from app.main.api_streamer import StationStreamer
+from app.main.streamer import StationStreamer
 
 
 @bp.route('/')
@@ -12,7 +12,7 @@ def index():
     """
     try:
         api = StationStreamer()
-        stations, last_updated = api.get_station_data()
+        stations, last_updated = api.select_data()
         return render_template('index.html', stations=stations, last_updated=last_updated)
     except:
         flash("Not possible to retrieve data from the API. "
