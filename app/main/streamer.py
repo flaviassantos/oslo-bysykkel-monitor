@@ -63,7 +63,7 @@ class StationStreamer:
         df_status = pd.DataFrame(dict_status)
         df_info = pd.DataFrame(dict_info)
         df = pd.concat([df_info, df_status], sort=False, axis=1, join='outer')
-        df = df[df['is_installed'] == 1]
+        df = df[(df['is_installed'] == 1) & (df['is_renting'] == 1)]
         df = df[self.columns]
         df['last_updated'] = last_updated
         df = df.loc[:, ~df.columns.duplicated()]
